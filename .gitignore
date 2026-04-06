@@ -60,3 +60,30 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+.DS_Store
+# Derived Data
+DerivedData/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# Xcode local settings
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+xcuserdata/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Build artifacts
+build/
+*.o
+*.d
+
+# CocoaPods (if you add it later)
+Pods/
+Podfile.lock
