@@ -37,17 +37,22 @@ class JXProtocol {
     ///   - driveY: -1.0=forward, +1.0=reverse (left joystick vertical)
     ///   - steerX: -1.0=left, +1.0=right (right joystick horizontal)
     func buildDrivePacket(driveY: Double, steerX: Double) -> Data {
-        // Differential drive mixing
-        var left = driveY
-        var right = driveY
-
-        if steerX > 0 {
-            right = max(-1.0, min(1.0, right + steerX))
-        } else if steerX < 0 {
-            left = max(-1.0, min(1.0, left - abs(steerX)))
+        if abs(driveY) < 0.05 && abs(steerX) > 0.05 {
+            // Pure steering — spin wheels in opposite directions
+            let ch1 = Self.axisToByte(-steerX)  // left wheel
+            let ch2 = Self.axisToByte(steerX)   // right wheel
+            return buildPacket(ch1: ch1, ch2: ch2)
+        } else {
+            // Driving with optional steering mix
+            var left = driveY
+            var right = driveY
+            if steerX > 0 {
+                right = max(-1.0, min(1.0, right + steerX))
+            } else if steerX < 0 {
+                left = max(-1.0, min(1.0, left - abs(steerX)))
+            }
+            return buildPacket(ch1: Self.axisToByte(left), ch2: Self.axisToByte(right))
         }
-
-        return buildPacket(ch1: Self.axisToByte(left), ch2: Self.axisToByte(right))
     }
 
     /// Build raw packet with explicit channel bytes
